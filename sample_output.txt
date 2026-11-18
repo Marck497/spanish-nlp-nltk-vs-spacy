@@ -1,0 +1,110 @@
+TEXT: Iberia devolvió 1.800 € a Lucía Fernández tras cancelar 3 vuelos en Bilbao. La cola llegaba hasta la puerta de embarque. Lo contó en https://www.aena.es con #VuelosCancelados.
+
+A. Tokenization
+---------------
+WordPunctTokenizer:
+['Iberia', 'devolvió', '1', '.', '800', '€', 'a', 'Lucía', 'Fernández', 'tras', 'cancelar', '3', 'vuelos', 'en', 'Bilbao', '.', 'La', 'cola', 'llegaba', 'hasta', 'la', 'puerta', 'de', 'embarque', '.', 'Lo', 'contó', 'en', 'https', '://', 'www', '.', 'aena', '.', 'es', 'con', '#', 'VuelosCancelados', '.']
+TweetTokenizer:
+['Iberia', 'devolvió', '1.800', '€', 'a', 'Lucía', 'Fernández', 'tras', 'cancelar', '3', 'vuelos', 'en', 'Bilbao', '.', 'La', 'cola', 'llegaba', 'hasta', 'la', 'puerta', 'de', 'embarque', '.', 'Lo', 'contó', 'en', 'https://www.aena.es', 'con', '#VuelosCancelados', '.']
+
+B. Stemming (NLTK Snowball)
+---------------------------
+WORD             STEM
+Iberia           iberi
+devolvió         devolv
+a                a
+Lucía            luc
+Fernández        fernandez
+tras             tras
+cancelar         cancel
+vuelos           vuel
+en               en
+Bilbao           bilba
+La               la
+cola             col
+llegaba          lleg
+hasta            hast
+la               la
+puerta           puert
+de               de
+embarque         embarqu
+Lo               lo
+contó            cont
+en               en
+con              con
+
+C. Lemmas and POS tags (spaCy)
+------------------------------
+TOKEN                    LEMMA                    POS
+Iberia                   Iberia                   PROPN
+devolvió                 devolver                 VERB
+1.800                    1800                     NUM
+€                        €                        NOUN
+a                        a                        ADP
+Lucía                    Lucía                    PROPN
+Fernández                Fernández                PROPN
+tras                     tras                     ADP
+cancelar                 cancelar                 VERB
+3                        3                        NUM
+vuelos                   vuelo                    NOUN
+en                       en                       ADP
+Bilbao                   Bilbao                   PROPN
+.                        .                        PUNCT
+La                       el                       DET
+cola                     cola                     NOUN
+llegaba                  llegar                   VERB
+hasta                    hasta                    ADP
+la                       el                       DET
+puerta                   puerta                   NOUN
+de                       de                       ADP
+embarque                 embarque                 NOUN
+.                        .                        PUNCT
+Lo                       él                       PRON
+contó                    contar                   VERB
+en                       en                       ADP
+https://www.aena.es      https://www.aena.        NOUN
+con                      con                      ADP
+#                        #                        NOUN
+VuelosCancelados         vueloscancelados         NOUN
+.                        .                        PUNCT
+
+D. Stem vs. lemma
+-----------------
+WORD             STEM             LEMMA
+devolvió         devolv           devolver
+vuelos           vuel             vuelo
+cola             col              cola
+llegaba          lleg             llegar
+puerta           puert            puerta
+embarque         embarqu          embarque
+contó            cont             contar
+
+E. Rule-based extraction (RegexpParser)
+---------------------------------------
+Rule: MONEY: {<NUM><NOUN>}
+
+Sentence: Iberia devolvió 1.800 € a Lucía Fernández tras cancelar 3 vuelos en Bilbao. La cola llegaba hasta la puerta de embarque. Lo contó en https://www.aena.es con #VuelosCancelados.
+Tags: [('Iberia', 'PROPN'), ('devolvió', 'VERB'), ('1.800', 'NUM'), ('€', 'NOUN'), ('a', 'ADP'), ('Lucía', 'PROPN'), ('Fernández', 'PROPN'), ('tras', 'ADP'), ('cancelar', 'VERB'), ('3', 'NUM'), ('vuelos', 'NOUN'), ('en', 'ADP'), ('Bilbao', 'PROPN'), ('.', 'PUNCT'), ('La', 'DET'), ('cola', 'NOUN'), ('llegaba', 'VERB'), ('hasta', 'ADP'), ('la', 'DET'), ('puerta', 'NOUN'), ('de', 'ADP'), ('embarque', 'NOUN'), ('.', 'PUNCT'), ('Lo', 'PRON'), ('contó', 'VERB'), ('en', 'ADP'), ('https://www.aena.es', 'NOUN'), ('con', 'ADP'), ('#', 'NOUN'), ('VuelosCancelados', 'NOUN'), ('.', 'PUNCT')]
+Matches:
+  (MONEY 1.800/NUM €/NOUN)
+  (MONEY 3/NUM vuelos/NOUN)
+
+Sentence: Iberia devolvió € 1.800 a Lucía.
+Tags: [('Iberia', 'PROPN'), ('devolvió', 'VERB'), ('€', 'ADP'), ('1.800', 'NUM'), ('a', 'ADP'), ('Lucía', 'PROPN'), ('.', 'PUNCT')]
+Matches:
+
+F. Named entities (spaCy)
+-------------------------
+Iberia                               LOC
+Lucía Fernández                      PER
+Bilbao                               LOC
+La cola                              MISC
+Lo contó en https://www.aena.es      MISC
+VuelosCancelados                     MISC
+
+G. Ambiguous word: 'cola'
+-------------------------
+Sentence: Iberia devolvió 1.800 € a Lucía Fernández tras cancelar 3 vuelos en Bilbao. La cola llegaba hasta la puerta de embarque. Lo contó en https://www.aena.es con #VuelosCancelados.
+  cola: lemma = cola, POS = NOUN
+Sentence: El perro movía la cola.
+  cola: lemma = cola, POS = NOUN
